@@ -6,5 +6,6 @@ import { WalletsController } from './http/wallets.controller.js';
 @Module({
   controllers: [WalletsController],
   providers: [CreateWalletUseCase, WalletQueries],
+  exports: [WalletQueries],
 })
 export class WalletsModule {}
