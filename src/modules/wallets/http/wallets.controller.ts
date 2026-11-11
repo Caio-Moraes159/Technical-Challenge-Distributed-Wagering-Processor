@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { CreateWalletUseCase } from '../application/create-wallet.use-case.js';
 import { WalletQueries } from '../application/wallet-queries.js';
+import { ReconcileWalletUseCase } from '../application/reconcile-wallet.use-case.js';
 import type { Wallet } from '../domain/wallet.js';
 
 const toWalletResponse = (w: Wallet) => ({
@@ -25,6 +26,8 @@ export class WalletsController {
     @Inject(CreateWalletUseCase)
     private readonly createWallet: CreateWalletUseCase,
     @Inject(WalletQueries) private readonly queries: WalletQueries,
+    @Inject(ReconcileWalletUseCase)
+    private readonly reconcileWallet: ReconcileWalletUseCase,
   ) {}
 
   @Post()
@@ -63,5 +66,11 @@ export class WalletsController {
       })),
       nextCursor: page.nextCursor ?? null,
     };
+  }
+
+  @Post(':walletId/reconciliation')
+  @HttpCode(200)
+  async reconcile(@Param('walletId') walletId: string) {
+    return this.reconcileWallet.execute(walletId);
   }
 }

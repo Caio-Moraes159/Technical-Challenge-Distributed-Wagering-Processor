@@ -1,15 +1,12 @@
-import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
-import { DomainExceptionFilter } from './modules/shared/domain/domain-exception.filter.js';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
 
-  app.useGlobalFilters(new DomainExceptionFilter());
-  app.enableShutdownHooks();
+  app.useLogger(app.get(Logger));
 
-  await app.listen(Number(process.env.PORT ?? 3000));
+  await app.listen(3000);
 }
-
 bootstrap();
